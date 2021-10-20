@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<flow name="test101112Flow" doc:id="f44ec0c6-be55-4763-b521-7bccfb7c77e1" >
+		<http:listener doc:name="HTTP :/GET" doc:id="1d87e3a7-7a6e-4882-af1d-427f72946284" config-ref="HTTP_Listener_config" path="/testingnulltest"/>
+		<set-payload value="Ambi" doc:name="Set Payload" doc:id="b905313c-050f-494b-85f2-3352f47cc31e" />
+		<validation:is-not-null doc:name="Is not null" doc:id="78243a3e-678c-4794-aedd-d847ee9590a3" value="#[payload]" message="The payload is null"/>
+	</flow>
+</mule>

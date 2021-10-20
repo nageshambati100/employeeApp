@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="26a55075-7b05-4fee-98e9-7bb34a13cb86" >
+		<db:mssql-connection host="DESKTOP-S1Q1Q5P" instanceName="MSSQLSERVER" port="1433" user="Ambi" password="Ambi@123" databaseName="Mulesoft" />
+	</db:config>
+	<flow name="test1011Flow2" doc:id="0d4e86f6-f867-4c68-b142-73a2fcb45c18" >
+		<http:listener doc:name="Listener" doc:id="1ea604e6-fda9-4078-9675-98f29f74dd4c" config-ref="HTTP_Listener_config" path="/payload"/>
+		<set-payload value="#[[1,2,3,4]]" doc:name="[1,2,3,4]" doc:id="44041799-f5b2-40a5-a57e-fff86b7b2363" />
+		<set-variable value="#['10']" doc:name="quantity = 10" doc:id="96943005-48a8-4c69-8ee8-d3437a1e2d6c" variableName="quantity"/>
+		<ee:transform doc:name="Transform Message" doc:id="d062b9a8-3420-4527-a8d4-2744953cb054" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+var conductorIds = [592,921]
+---
+{(
+trains:conductorIds map((engineId, index) ->
+		train:{
+			engineerID: engineId
+		}
+	)
+)}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<foreach doc:name="For Each" doc:id="f24479ca-e1e0-4655-a8f1-240838ad0a00" >
+			<set-payload value='#["order" ++ payload]' doc:name="Set Payload" doc:id="bd543595-00a3-494d-9f72-b697ee4176e7" />
+			<set-variable value="#[vars.quantity + 1]" doc:name="quantity + 1" doc:id="a9237a7e-dc41-4480-b978-942f1c0d8888" variableName="quantity"/>
+		</foreach>
+		<logger level="INFO" doc:name="Logger" doc:id="6422cb89-964e-49e2-9ae4-eac7de54793f" />
+	</flow>
+	<flow name="test1011Flow3" doc:id="1e3b031f-950c-4611-88de-442447981890" >
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="b7cd1d74-4871-4b4e-ae68-355f91938ae3" />
+	</flow>
+	<flow name="test1011Flow1" doc:id="144e71f1-d10d-4f26-b368-407b0ae34387" >
+		<http:listener doc:name="Listener" doc:id="68f17dd2-4c8f-45d9-9f3a-8be5b6613c2f" config-ref="HTTP_Listener_config" path="/select"/>
+		<db:select doc:name="Select" doc:id="ec9ff98d-c4ba-49f6-a483-4d7dcd92d847" config-ref="Database_Config">
+			<db:sql ><![CDATA[select * from address]]></db:sql>
+		</db:select>
+		<logger level="INFO" doc:name="Logger" doc:id="19f5ef16-0e17-4e07-9d94-0d8ac31baedd" message="#[typeOf(payload)]"/>
+	</flow>
+	<flow name="test1011Flow" doc:id="d5c99a2f-3dd8-4bd8-a2d4-b0c12f55e15f" >
+		<http:listener doc:name="Listener" doc:id="a1befc24-f813-4105-871f-d45c71a4a749" config-ref="HTTP_Listener_config" path="/new"/>
+		<scatter-gather doc:name="Scatter-Gather" doc:id="7ee9b790-ed73-4526-afa5-dbd09d29ae85" >
+			<route >
+				<flow-ref doc:name="apple" doc:id="bb77c4e9-47d6-49db-9de8-4daee1c442db" name="apple"/>
+			</route>
+			<route >
+				<flow-ref doc:name="banana" doc:id="3dd5b588-1395-4f78-ab4a-039ac2fa0f76" name="banana"/>
+			</route>
+		</scatter-gather>
+	</flow>
+	<sub-flow name="apple" doc:id="3d0d70bf-f63f-4fa8-a034-6a46bcee8cb2" >
+		<set-payload value="apple" doc:name="apple" doc:id="064f51f0-e3bd-47f4-9fbe-46188c988e40" />
+	</sub-flow>
+	<sub-flow name="banana" doc:id="1586936d-e7f4-44ea-b36f-5336135f6a8d" >
+		<set-payload value="banana" doc:name="banana" doc:id="d5838559-238c-44f2-a2c4-13146193f201" />
+	</sub-flow>
+</mule>

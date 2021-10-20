@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="d2994727-c9e2-4198-a759-a722d42cd522" >
+		<http:listener-connection host="0.0.0.0" port="8096" />
+	</http:listener-config>
+	<flow name="subflowFlow3" doc:id="06bda409-4079-42a3-a822-fa5ef7e1e51c" >
+		<http:listener doc:name="Listener" doc:id="0382bf45-2713-4e71-a2e7-647796f35621" config-ref="HTTP_Listener_config" path="/100"/>
+		<scatter-gather doc:name="Scatter-Gather" doc:id="06d64658-0676-4d45-ba48-0def6c7746eb" >
+			<route >
+				<flow-ref doc:name="100" doc:id="54867d55-0d52-4989-801f-8761dd5f7ec8" name="100"/>
+			</route>
+			<route >
+				<flow-ref doc:name="200" doc:id="66b06ac6-a51e-48fe-8a27-74ec855229f4" name="200"/>
+			</route>
+		</scatter-gather>
+		<ee:transform doc:name="Transform Message" doc:id="7b179c39-6c41-4809-856a-e5fddc5756a9">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="9452a621-825f-41c6-a927-ae7472371d3c" message="#[payload]"/>
+	</flow>
+	<flow name="100" doc:id="a73744e8-1571-4ff9-b102-42324821cb14" >
+		<set-payload value='#["100"]' doc:name="100" doc:id="126a980c-b0d6-4fcc-8c36-14faccf43356" />
+	</flow>
+	<flow name="200" doc:id="a039d018-2599-459b-9175-c00542291417" >
+		<set-payload value='#["200"]' doc:name="200" doc:id="d73ae9f3-f9e7-4619-af77-db1d501bff83" />
+	</flow>
+	<flow name="subflowFlow2" doc:id="2b59bc9b-8557-422e-af7f-74f05575f03e" >
+		<http:listener doc:name="Listener" doc:id="65e0ade2-5025-44b2-9805-cb5155c53880" config-ref="HTTP_Listener_config" path="/dove"/>
+		<set-payload value="Before" doc:name="Before" doc:id="5d24ca53-5938-486d-bc60-139f20cd47fe" />
+		<validation:is-null doc:name="Is null" doc:id="4d811936-cf37-47cd-a9a5-0e45d307f862" config-ref="Validation_Config" value="#[payload]" message="Validation Error"/>
+		<set-payload value="After" doc:name="After" doc:id="cc7105c4-7b1e-42aa-be20-a829fbf35935" />
+	</flow>
+	<flow name="subflowFlow1" doc:id="8cbc1174-71ed-40a3-96e3-3cead05309d1" >
+		<http:listener doc:name="Listener" doc:id="e45cde7e-7aa5-4211-9bb7-a428ac75df52" config-ref="HTTP_Listener_config" path="/privateflowval"/>
+		<flow-ref doc:name="Flow Reference" doc:id="1e42f2b3-ba14-4c61-a9a3-9743ca2fd24a" name="provateflowvalidation"/>
+		<set-variable value="1" doc:name="Set Variable" doc:id="394b6498-3bf3-4d08-9e67-af00430d8d7b" variableName="test"/>
+		<set-payload value="Success - Main flow" doc:name="Success - Main flow" doc:id="6bec6b72-8522-4e5d-8dc0-6195e9eb04a7" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="eecb3e35-e1ef-4191-81b0-8a35495dd0d2" >
+				<set-payload value="Error - Main flow" doc:name="Set Payload" doc:id="c399493d-aebb-4955-ba22-4b8210792ada" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="provateflowvalidation" doc:id="a8eae118-351f-46a3-89a2-b3f04ca3ecf5" >
+		<validation:is-number numberType="INTEGER" doc:name="Is number" doc:id="32a9b26e-9c54-441d-aacc-f3ef923fd76b" config-ref="Validation_Config" value="payload"/>
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="caf7332a-44d7-4f6f-af23-b4b4759b2119" >
+				<set-payload value="Error - private flow" doc:name="Set Payload" doc:id="e33ec547-fee0-4838-a202-4a729f693a13" />
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="subflowFlow" doc:id="54c43d79-9c74-4ca2-b00e-5a6099270acd" >
+		<http:listener doc:name="Listener" doc:id="2b739245-fd0f-4f1f-a5c7-18f293b34c43" config-ref="HTTP_Listener_config" path="/subflow"/>
+		<set-payload value="order01" doc:name="Set Payload" doc:id="f049e56a-13d2-4742-8dce-e75461a038cf" />
+		<set-variable value="01" doc:name="Set Variable" doc:id="fe8ea49d-9f0f-4317-a9da-3a81be1e07d1" variableName="quantity"/>
+		<logger level="INFO" doc:name="Logger" doc:id="d8e6b1ce-64a3-454c-b0d5-f6a22caadf0d" />
+		<flow-ref doc:name="Flow Reference" doc:id="a734d183-be02-4b8f-b198-a0affcdee79f" name="childflow"/>
+	</flow>
+	<flow name="childflow" doc:id="a65e26c3-ada7-4905-9112-c25856e2766c" >
+		<logger level="INFO" doc:name="Logger" doc:id="80f30d71-321c-47a6-8950-9340e61d4d74" />
+	</flow>
+</mule>

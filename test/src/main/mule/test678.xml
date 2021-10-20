@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<flow name="main2" doc:id="b891b86e-2331-4e2f-8790-6e7ad548f8a7" >
+		<http:listener doc:name="HTTP: GET/" doc:id="781a77e5-b316-4cf7-974b-870a6f907389" config-ref="HTTP_Listener_config" path="/testertest"/>
+		<set-payload value="#[null]" doc:name="null" doc:id="6fb59c5a-2a7b-4ea7-8997-1c05ccea8e09" />
+		<validation:is-not-null doc:name="payload" doc:id="d346b5de-485c-4b96-b9a6-61710d1d607d" value="#[payload]"/>
+	
+
+</flow>
+</mule>

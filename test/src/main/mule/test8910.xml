@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="test8910Flow" doc:id="8d338392-6396-40f8-a27c-9dee746edf8a" initialState="stopped">
+		<scheduler doc:name="Scheduler" doc:id="1c3b36e6-948b-41c3-9cd6-2ab52338d0f5" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="10" timeUnit="SECONDS"/>
+			</scheduling-strategy>
+		</scheduler>
+		<set-variable value="1" doc:name="counter" doc:id="ab05ef09-3818-4f32-8930-5e11a6cf4310" variableName="counter"/>
+		<set-payload value="#[[1,2,3]]" doc:name="Set Payload" doc:id="4da15801-670a-4f6b-9074-6bedd7eeefff" />
+		<batch:job jobName="test8910Batch_Job" doc:id="d19054cf-3176-4a24-8042-de8608da6b47" >
+			<batch:process-records >
+				<batch:step name="Batch_Step" doc:id="35dd3ce8-6d64-49b5-aa2d-a8cd97723df6" >
+					<set-variable value="#[(vars.counter)+10]" doc:name="Increament Counter +10" doc:id="d3f452ad-78c2-47c2-bb40-939bb2350c06" variableName="stepVar"/>
+					<set-variable value="#[vars.stepVar]" doc:name="stepVar to counter var" doc:id="be1cbfb1-5bd9-48aa-b5a5-1621a9ea7633" variableName="counterVar"/>
+				</batch:step>
+			</batch:process-records>
+			<batch:on-complete >
+				<logger level="INFO" doc:name="Logger" doc:id="ca3b6a31-ac7f-4ce7-9be0-b0e931c289a2" message="#[vars.stepVar]"/>
+			</batch:on-complete>
+		</batch:job>
+	</flow>
+</mule>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="test789Flow" doc:id="6650e325-96e2-4675-b1e1-a0fad230ac04" initialState="stopped">
+		<scheduler doc:name="Scheduler" doc:id="9f2b3c96-8917-43ef-972b-f50f36e4633a" >
+			<scheduling-strategy >
+				<fixed-frequency />
+			</scheduling-strategy>
+		</scheduler>
+		<set-payload value="#[[1,2,3,4]]" doc:name="Set Payload" doc:id="26061c5e-250b-4c6a-b1dd-a7d8a05d2ea8" />
+		<batch:job jobName="test789Batch_Job" doc:id="54046d27-3f24-4bea-b10d-2496a3c086fe" >
+			<batch:process-records >
+				<batch:step name="Batch_Step" doc:id="eba410d8-e4e2-4635-8841-189d9f8385e8" acceptExpression="#[(payload mod 2)!=0]">
+					<ee:transform doc:name="Transform Message" doc:id="61339ac7-1f9d-4014-861a-a31d3def9712" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload / 3]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+					<batch:aggregator doc:name="Batch Aggregator" doc:id="dd638583-592e-42b9-b326-4f8b79b49ce7" size="2">
+						<logger level="INFO" doc:name="payload" doc:id="5561adaf-1323-44c2-a325-abe4d8cd212c" />
+					</batch:aggregator>
+				</batch:step>
+			</batch:process-records>
+		</batch:job>
+	</flow>
+</mule>

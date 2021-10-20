@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp" xmlns:ftp="http://www.mulesoft.org/schema/mule/ftp"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ftp http://www.mulesoft.org/schema/mule/ftp/current/mule-ftp.xsd
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd">
+	<file:config name="File_Config" doc:name="File Config" doc:id="bf6d8be8-a921-4d62-8cb6-92a0fb1e565e" >
+		<file:connection workingDir="C:\Users\ambat\OneDrive\Desktop\APDevFundamentals4.3_studentFiles_SP_30oct2020\resources\input" />
+	</file:config>
+	<flow name="test91011Flow" doc:id="1652941c-3359-4b40-bd5f-827f949eb377" >
+		<http:listener doc:name="Listener" doc:id="835edee6-5f50-4ab9-a8e1-fe9da2da7169" config-ref="HTTP_Listener_config" path="/foreach"/>
+		<set-payload value='#[{
+"account":{
+	"accountID":"4829ADJ-4833",
+	"name":"mine hire",
+	"balance":"4891.40"
+	
+},
+"account":{
+	"accountID":"4829AJJ-4833",
+	"name":"LAuren tester",
+	"balance":"1381.40"
+	},
+	
+"account":{
+	"accountID":"KJ6FF8-4833",
+	"name":"Test test",
+	"balance":"282.40"
+	}
+	}]' doc:name="Set Payload" doc:id="8f1adc54-7545-45a9-9280-79cb171bf39a" />
+		<foreach doc:name="For Each" doc:id="0e4a657b-df7f-4820-a0f1-dffe09023c8e" batchSize="2">
+			<file:write doc:name="Write" doc:id="66a30ca8-6e89-43db-933d-034eebb62755" config-ref="File_Config" path='#["C:/Users/ambat/OneDrive/Desktop/APDevFundamentals4.3_studentFiles_SP_30oct2020/resources/output/accounttest-" ++ random()]'/>
+		</foreach>
+	</flow>
+</mule>
