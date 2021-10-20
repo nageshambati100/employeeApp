@@ -16,7 +16,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 				<flow-ref doc:name="100" doc:id="54867d55-0d52-4989-801f-8761dd5f7ec8" name="100"/>
 			</route>
 			<route >
-				<flow-ref doc:name="200" doc:id="66b06ac6-a51e-48fe-8a27-74ec855229f4" name="200"/>
+				<flow-ref doc:name="2001" doc:id="66b06ac6-a51e-48fe-8a27-74ec855229f4" name="200"/>
 			</route>
 		</scatter-gather>
 		<ee:transform doc:name="Transform Message" doc:id="7b179c39-6c41-4809-856a-e5fddc5756a9">
