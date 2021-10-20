@@ -30,7 +30,7 @@ payload]]></ee:set-payload>
 		<logger level="INFO" doc:name="Logger" doc:id="9452a621-825f-41c6-a927-ae7472371d3c" message="#[payload]"/>
 	</flow>
 	<flow name="100" doc:id="a73744e8-1571-4ff9-b102-42324821cb14" >
-		<set-payload value='#["100"]' doc:name="100" doc:id="126a980c-b0d6-4fcc-8c36-14faccf43356" />
+		<set-payload value='#["1001"]' doc:name="100" doc:id="126a980c-b0d6-4fcc-8c36-14faccf43356" />
 	</flow>
 	<flow name="200" doc:id="a039d018-2599-459b-9175-c00542291417" >
 		<set-payload value='#["200"]' doc:name="200" doc:id="d73ae9f3-f9e7-4619-af77-db1d501bff83" />
